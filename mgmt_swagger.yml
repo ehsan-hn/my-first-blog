@@ -1,0 +1,2628 @@
+openapi: 3.0.0
+# Added by API Auto Mocking Plugin
+info:
+  description: Mixin management api 
+  version: "1.0.0"
+  title: Mixin Management API
+tags:
+- name: "category"
+- name: "brand"
+- name: "product"
+- name: "tag"
+- name: "product image"
+- name: "secondary attributes"
+
+
+paths:
+  /api/management/v1/categories/:
+    get:
+      tags:
+      - category
+      summary: لیست دسته ها با pagination
+      security:
+        - ApiKeyAuth: []
+      parameters:
+
+        - in: query
+          name: page
+          description: page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: returns categories in page
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  next:
+                    type: string
+                    nullable: true
+                    example: '/api/management/v1/categories/?page=2'
+                    description: next page url if exists
+                  previous:
+                    type: string
+                    nullable: true
+                    example: null
+                    description: previous page url if exists
+                  total_pages:
+                    type: integer
+                    description: total number of pages
+                    example: 2
+                  current_page:
+                    type: integer
+                    description: current page
+                    example: 1
+                  per_page:
+                    type: integer
+                    description: items per page
+                    example: 100
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/categoryItem'
+                      
+    post:
+      tags: 
+      - category
+      summary: اضافه کردن دسته‌بندی جدید
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+        - in: query
+          name: name
+          description: name of category
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: description
+          description: description for category
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: parent
+          description: parent category id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: categories_menu_show
+          description:  shows category in menu
+          required: false
+          schema:
+            type: boolean
+            default: true
+        - in: query
+          name: top_menu_separate_show
+          description:  show in top menu sepearatly
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: image
+          description:  image for category
+          required: false
+          schema:
+            type: file
+            default: null
+        - in: query
+          name: image_alt
+          description:  alternative text for image
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: available
+          description:  is category avaialble or not
+          required: false
+          schema:
+            type: boolean
+            default: true   
+        - in: query
+          name: seo_title
+          description: seo title
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: seo_description
+          description: seo description
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: old_path
+          description:  old category url in case you moved to from another platform to mixin
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: old_slug
+          description:  old category slug in case you moved to from another platform to mixin
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: returns new category id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: True
+                  id:
+                    type: integer
+                    example: 2
+                    
+        '400':
+          description: incase of bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/badRequest'
+
+  /api/management/v1/categories/{pk}:
+    get:
+      tags:
+      - category
+      summary: دریافت اطلاعات دسته‌بندی مورد نظر
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: pk
+          description: category id
+          required: True
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: return category details
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/categoryDetail'
+    delete:
+      tags:
+      - category
+      summary: حذف دسته‌بندی
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: pk
+          description: category id
+          required: True
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: returns no content
+    put:
+      tags: 
+      - category
+      summary: ویرایش دسته‌نبدی
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+        - in: path
+          name: pk
+          description: category id
+          required: True
+          schema:
+            type: integer
+        - in: query
+          name: name
+          description: name of category
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: description
+          description: description for category
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: parent
+          description: parent category id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: categories_menu_show
+          description:  shows category in menu
+          required: false
+          schema:
+            type: boolean
+            default: true
+        - in: query
+          name: top_menu_separate_show
+          description:  show in top menu sepearatly
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: image
+          description:  image for category
+          required: false
+          schema:
+            type: file
+            default: null
+        - in: query
+          name: image_alt
+          description:  alternative text for image
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: available
+          description:  is category avaialble or not
+          required: false
+          schema:
+            type: boolean
+            default: true   
+        - in: query
+          name: seo_title
+          description: seo title
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: seo_description
+          description: seo description
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: old_path
+          description:  old category url in case you moved to from another platform to mixin
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: old_slug
+          description:  old category slug in case you moved to from another platform to mixin
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: return success with true value
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: True
+                    
+        '400':
+          description: incase of bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/badRequest'
+  
+  /api/management/v1/brands/:
+    get:
+      tags:
+      - brand
+      summary: لیست برند‌ها
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: query
+          name: page
+          description: page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: returns brands in page
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  next:
+                    type: string
+                    nullable: true
+                    example: '/api/management/v1/brands/?page=2'
+                    description: next page url if exists
+                  previous:
+                    type: string
+                    nullable: true
+                    example: null
+                    description: previous page url if exists
+                  total_pages:
+                    type: integer
+                    description: total number of pages
+                    example: 2
+                  current_page:
+                    type: integer
+                    description: current page
+                    example: 1
+                  per_page:
+                    type: integer
+                    description: items per page
+                    example: 100
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/brandItem'
+    post:
+      tags: 
+      - brand
+      summary: اضافه کردن برند‌ جدید
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+        - in: query
+          name: name
+          description: name of brand
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: image
+          description:  image for brand
+          required: false
+          schema:
+            type: file
+            default: null
+        - in: query
+          name: image_alt
+          description:  alternative text for image
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: seo_title
+          description: seo title
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: seo_description
+          description: seo description
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: return id of new brand
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: True
+                  id:
+                    type: integer
+                    example: 2
+                    
+        '400':
+          description: incase of bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/badRequest'
+                      
+  /api/management/v1/brands/{pk}:
+    get:
+      tags:
+      - brand
+      summary: دریافت اطلاعات برند مورد نظر
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: pk
+          description: brand id
+          required: True
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: return brand details
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/brandDetail'
+    delete:
+      tags:
+      - brand
+      summary: حذف برند
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: pk
+          description: brand id
+          required: True
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: returns no content
+    put:
+      tags: 
+      - brand
+      summary: ویرایش برند
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+        - in: path
+          name: pk
+          description: category id
+          required: True
+          schema:
+            type: integer
+        - in: query
+          name: name
+          description: name of category
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: image
+          description:  image for category
+          required: false
+          schema:
+            type: file
+            default: null
+        - in: query
+          name: image_alt
+          description:  alternative text for image
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: seo_title
+          description: seo title
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: seo_description
+          description: seo description
+          required: false
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: return success with true value
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: True
+                    
+        '400':
+          description: incase of bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/badRequest'
+                      
+  /api/management/v1/products/:
+    get:
+      tags:
+      - product
+      summary: لیست محصولات
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: query
+          name: page
+          description: page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: returns products in page
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  next:
+                    type: string
+                    nullable: true
+                    example: '/api/management/v1/products/?page=2'
+                    description: next page url if exists
+                  previous:
+                    type: string
+                    nullable: true
+                    example: null
+                    description: previous page url if exists
+                  total_pages:
+                    type: integer
+                    description: total number of pages
+                    example: 2
+                  current_page:
+                    type: integer
+                    description: current page
+                    example: 1
+                  per_page:
+                    type: integer
+                    description: items per page
+                    example: 100
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/productItem'
+    post:
+      tags: 
+      - product
+      summary: اضافه کردن محصول جدید
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+      
+        - in: query
+          name: name
+          description: name of product
+          required: true
+          schema:
+            type: string
+            
+        - in: query
+          name: description
+          description: description for product
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: analysis
+          description: analysis
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: english_name
+          description: product name in english
+          required: false
+          schema:
+            type: string  
+            
+        - in: query
+          name: main_category
+          description: main category id
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: other_categories
+          description: other categories id in list
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              
+        - in: query
+          name: brand
+          description: product brand id
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: is_digital
+          description: is product digital ro not
+          required: false
+          schema:
+            type: boolean
+            default: false
+            
+        - in: query
+          name: price
+          description: product price
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: compare_at_price
+          description: product price before sale
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: special_offer
+          description: is product in speciall offer or not
+          required: false
+          schema:
+            type: boolean
+            default: false
+            
+        - in: query
+          name: special_offer_end
+          description: end date of product special offer
+          required: false
+          schema:
+            type: string    
+            
+        - in: query
+          name: length
+          description: length
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: width
+          description: width
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: height
+          description: height
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: weight
+          description: weight
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: barcode
+          description: barcode
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: show_price
+          description: show price
+          required: false
+          schema:
+            type: boolean
+            default: true
+            
+        - in: query
+          name: manage_stock
+          description: managing product stock
+          required: false
+          schema:
+            type: boolean
+            default: false
+            
+        - in: query
+          name: out_of_stock
+          description: is product out of stock
+          required: false
+          schema:
+            type: boolean
+            default: false
+            
+        - in: query
+          name: stock
+          description: product stock
+          required: false
+          schema:
+            type: integer
+            default: 0
+            
+        - in: query
+          name: stock_type
+          description: stock type of product ( choices are ['limited', 'unlimited', 'call', 'out_of_stock'])
+          required: false
+          schema:
+            type: string
+            default: unlimited
+            
+        - in: query
+          name: max_order_quantity
+          description: maximum quantity of product in cart
+          required: false
+          schema:
+            type: integer
+            default: 0
+            
+        - in: query
+          name: guarantee
+          description: product guarantee
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: product_identifier
+          description: product identifier
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: old_path
+          description:  old product url in case you moved to from another platform to mixin
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: old_slug
+          description:  old product slug in case you moved to from another platform to mixin
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: has_variants
+          description:  product has variants or not
+          required: false
+          schema:
+            type: boolean
+            default: false
+
+        - in: query
+          name: available
+          description:  is product available or not
+          required: false
+          schema:
+            type: boolean
+            default: true
+            
+        - in: query
+          name: seo_title
+          description: seo title
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: seo_description
+          description: seo description
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: return id of new product
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: True
+                  id:
+                    type: integer
+                    example: 2
+                    
+        '400':
+          description: incase of bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/badRequest'
+
+  /api/management/v1/products/{pk}:
+    get:
+      tags:
+      - product
+      summary: دریافت اطلاعات محصول
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: pk
+          description: product id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: return product info
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/productDetail'
+    put:
+      tags: 
+      - product
+      summary: ویرایش محصول
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: true
+          schema:
+            type: integer
+            
+        - in: query
+          name: name
+          description: name of product
+          required: true
+          schema:
+            type: string
+            
+        - in: query
+          name: description
+          description: description for product
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: analysis
+          description: analysis
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: english_name
+          description: product name in english
+          required: false
+          schema:
+            type: string  
+            
+        - in: query
+          name: main_category
+          description: main category id
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: other_categories
+          description: other categories id in list
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              
+        - in: query
+          name: brand
+          description: product brand id
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: is_digital
+          description: is product digital ro not
+          required: false
+          schema:
+            type: boolean
+            default: false
+            
+        - in: query
+          name: price
+          description: product price
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: compare_at_price
+          description: product price before sale
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: special_offer
+          description: is product in speciall offer or not
+          required: false
+          schema:
+            type: boolean
+            default: false
+            
+        - in: query
+          name: special_offer_end
+          description: end date of product special offer
+          required: false
+          schema:
+            type: string    
+            
+        - in: query
+          name: length
+          description: length
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: width
+          description: width
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: height
+          description: height
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: weight
+          description: weight
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: barcode
+          description: barcode
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: show_price
+          description: show price
+          required: false
+          schema:
+            type: boolean
+            default: true
+            
+        - in: query
+          name: manage_stock
+          description: managing product stock
+          required: false
+          schema:
+            type: boolean
+            default: false
+            
+        - in: query
+          name: out_of_stock
+          description: is product out of stock
+          required: false
+          schema:
+            type: boolean
+            default: false
+            
+        - in: query
+          name: stock
+          description: product stock
+          required: false
+          schema:
+            type: integer
+            default: 0
+            
+        - in: query
+          name: stock_type
+          description: stock type of product ( choices are ['limited', 'unlimited', 'call', 'out_of_stock'])
+          required: false
+          schema:
+            type: string
+            default: unlimited
+            
+        - in: query
+          name: max_order_quantity
+          description: maximum quantity of product in cart
+          required: false
+          schema:
+            type: integer
+            default: 0
+            
+        - in: query
+          name: guarantee
+          description: product guarantee
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: product_identifier
+          description: product identifier
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: old_path
+          description:  old product url in case you moved to from another platform to mixin
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: old_slug
+          description:  old product slug in case you moved to from another platform to mixin
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: has_variants
+          description:  product has variants or not
+          required: false
+          schema:
+            type: boolean
+            default: false
+
+        - in: query
+          name: available
+          description:  is product available or not
+          required: false
+          schema:
+            type: boolean
+            default: true
+            
+        - in: query
+          name: seo_title
+          description: seo title
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: seo_description
+          description: seo description
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: return success with true value
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: True
+                  id:
+                    type: integer
+                    example: 2
+                    
+        '400':
+          description: incase of bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/badRequest'
+
+    delete:
+      tags:
+      - product
+      summary: حذف محصول
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: returns no content
+          
+  /api/management/v1/products/{pk}/tags/:
+    get:
+      tags:
+      - tag
+      summary: لیست برچسب‌های یک محصول
+      security:
+        - ApiKeyAuth: []
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: query
+          name: page
+          description: page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+        
+      responses:
+        '200':
+          description: returns tags in page
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  next:
+                  
+                    type: string
+                    nullable: true
+                    example: '/api/management/v1/products/1/tags/?page=2'
+                    description: next page url if 
+                    
+                  previous:
+                    type: string
+                    nullable: true
+                    example: null
+                    description: previous page url if exists
+                    
+                  total_pages:
+                    type: integer
+                    description: total number of pages
+                    example: 2
+                    
+                  current_page:
+                    type: integer
+                    description: current page
+                    example: 1
+                    
+                  per_page:
+                    type: integer
+                    description: items per page
+                    example: 100
+                    
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/tagItem'
+    post:
+      tags: 
+      - tag
+      summary: اضافه کردن برچسب جدید برای محصول
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+        - in: query
+          name: value
+          description: tag value
+          required: true
+          schema:
+            type: string
+        
+      responses:
+        '200':
+          description: return id of new tag
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: True
+                  id:
+                    type: integer
+                    example: 2
+                    
+        '400':
+          description: incase of bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/badRequest'
+
+  /api/management/v1/products/{pk}/tags/{tag_id}:
+    get:
+      tags:
+      - tag
+      summary: دریافت اطلاعات یک برچسب
+      security:
+        - ApiKeyAuth: []
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: path
+          name: tag_id
+          description: tag id
+          required: True
+          schema:
+            type: integer
+        
+      responses:
+        '200':
+          description: returns tag
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/tagItem'
+    put:
+      tags: 
+      - tag
+      summary: ویرایش یک برچسب
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: path
+          name: tag_id
+          description: tag id
+          required: True
+          schema:
+            type: integer
+        
+        - in: query
+          name: value
+          description: tag value
+          required: true
+          schema:
+            type: string
+        
+      responses:
+        '200':
+          description: return success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: True
+                    
+        '400':
+          description: incase of bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/badRequest'
+
+    delete:
+      tags:
+      - tag
+      summary: حذف برچسب محصول
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: path
+          name: tag_id
+          description: tag id
+          required: True
+          schema:
+            type: integer
+        
+      responses:
+        '204':
+          description: returns no content
+             
+  /api/management/v1/products/{pk}/images/:
+    get:
+      tags:
+      - product image
+      summary: لیست عکس‌های یک محصول
+      security:
+        - ApiKeyAuth: []
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: query
+          name: page
+          description: page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+        
+      responses:
+        '200':
+          description: returns product images  in page
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  next:
+                  
+                    type: string
+                    nullable: true
+                    example: '/api/management/v1/products/1/images/?page=2'
+                    description: next page url if 
+                    
+                  previous:
+                    type: string
+                    nullable: true
+                    example: null
+                    description: previous page url if exists
+                    
+                  total_pages:
+                    type: integer
+                    description: total number of pages
+                    example: 2
+                    
+                  current_page:
+                    type: integer
+                    description: current page
+                    example: 1
+                    
+                  per_page:
+                    type: integer
+                    description: items per page
+                    example: 100
+                    
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/imageItem'
+    post:
+      tags: 
+      - product image
+      summary: اضافه کردن عکس برای محصول
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+        - in: query
+          name: image
+          description: product image
+          required: true
+          schema:
+            type: file
+        - in: query
+          name: image_alt
+          description: alternative text for image
+          schema:
+            type: string
+        - in: query
+          name: default
+          description: set image as default image for product
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: return id of new image
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: True
+                  id:
+                    type: integer
+                    example: 2
+                    
+        '400':
+          description: incase of bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/badRequest'
+          
+  /api/management/v1/products/{pk}/images/{image_id}/:
+    get:
+      tags:
+      - product image
+      summary: لیست عکس‌های یک محصول
+      security:
+        - ApiKeyAuth: []
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: path
+          name: image_id
+          description: image id
+          required: True
+          schema:
+            type: integer  
+            
+      responses:
+        '200':
+          description: returns product image info
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/imageItem'
+    put:
+      tags: 
+      - product image
+      summary: ویرایش عکس محصول
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: path
+          name: image_id
+          description: image id
+          required: True
+          schema:
+            type: integer  
+            
+        - in: query
+          name: image_alt
+          description: alternative text for image
+          schema:
+            type: string
+            
+        - in: query
+          name: default
+          description: set image as default image for product
+          schema:
+            type: boolean
+
+      responses:
+        '200':
+          description: return success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: True
+                    
+        '400':
+          description: incase of bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/badRequest'
+    delete:
+      tags:
+      - product image
+      summary: حذف عکس محصول
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: path
+          name: image_id
+          description: image id
+          required: True
+          schema:
+            type: integer
+        
+      responses:
+        '204':
+          description: returns no content
+  
+  /api/management/v1/products/{pk}/attributes/secondary/:
+    get:
+      tags:
+      - secondary attributes
+      summary: لیست مشخصات فرعی محصول
+      security:
+        - ApiKeyAuth: []
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: query
+          name: page
+          description: page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+        
+      responses:
+        '200':
+          description: return secondary attributes in page
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  next:
+                  
+                    type: string
+                    nullable: true
+                    example: '/api/management/v1/products/1/attributes/secondary/?page=2'
+                    description: next page url if 
+                    
+                  previous:
+                    type: string
+                    nullable: true
+                    example: null
+                    description: previous page url if exists
+                    
+                  total_pages:
+                    type: integer
+                    description: total number of pages
+                    example: 2
+                    
+                  current_page:
+                    type: integer
+                    description: current page
+                    example: 1
+                    
+                  per_page:
+                    type: integer
+                    description: items per page
+                    example: 100
+                    
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/scondaryAttributeItem'
+    post:
+      tags: 
+      - secondary attributes
+      summary: اضافه کردن مشخصه فرعی برای محصول
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: query
+          name: attribute
+          description: attribute name
+          schema:
+            type: string
+            
+        - in: query
+          name: value
+          description: attribute value
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: return id of attribute
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: True
+                  id:
+                    type: integer
+                    example: 2
+                    
+        '400':
+          description: incase of bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/badRequest'
+
+  /api/management/v1/products/{pk}/attributes/secondary/{attr_id}/:
+    get:
+      tags:
+      - secondary attributes
+      summary: دریافت اطلاعات مشخصه فرعی
+      security:
+        - ApiKeyAuth: []
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: path
+          name: attr_id
+          description: attribute id
+          required: True
+          schema:
+            type: integer
+            
+      responses:
+        '200':
+          description: return secondary attribute
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/scondaryAttributeItem'
+    put:
+      tags: 
+      - secondary attributes
+      summary: ویرایش مشخصه فرعی محصول
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: path
+          name: attr_id
+          description: attribute id
+          required: True
+          schema:
+            type: integer
+            
+        - in: query
+          name: attribute
+          description: attribute name
+          required: True
+
+          schema:
+            type: string
+            
+        - in: query
+          name: value
+          description: attribute value
+          required: True
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: return success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: True
+
+        '400':
+          description: incase of bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/badRequest'
+
+    delete:
+      tags:
+      - secondary attributes
+      summary: حذف مشخصه فرعی
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: path
+          name: attr_id
+          description: attribute id
+          required: True
+          schema:
+            type: integer
+        
+      responses:
+        '204':
+          description: returns no content
+
+  /api/management/v1/products/{pk}/attributes/main/:
+    get:
+      tags:
+      - main attributes
+      summary: لیست مشخصات اصلی
+      security:
+        - ApiKeyAuth: []
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: query
+          name: page
+          description: page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+        
+      responses:
+        '200':
+          description: return main attributes in page
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  next:
+                  
+                    type: string
+                    nullable: true
+                    example: '/api/management/v1/products/1/attributes/main/?page=2'
+                    description: next page url if 
+                    
+                  previous:
+                    type: string
+                    nullable: true
+                    example: null
+                    description: previous page url if exists
+                    
+                  total_pages:
+                    type: integer
+                    description: total number of pages
+                    example: 2
+                    
+                  current_page:
+                    type: integer
+                    description: current page
+                    example: 1
+                    
+                  per_page:
+                    type: integer
+                    description: items per page
+                    example: 100
+                    
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/mainAttributeItem'
+    post:
+      tags: 
+      - main attributes
+      summary: اضافه کرده مشخصه اصلی برای محصول
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: query
+          name: attribute
+          description: attribute name
+          schema:
+            type: string
+            
+        - in: query
+          name: values
+          description: attribute values
+          schema:
+            type: array
+            items:
+              type: integer
+
+      responses:
+        '200':
+          description: return id of attribute
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: True
+                  id:
+                    type: integer
+                    example: 2
+                    
+        '400':
+          description: incase of bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/badRequest'
+
+  /api/management/v1/products/{pk}/attributes/main/{attribute_name}/:
+    get:
+      tags:
+      - main attributes
+      summary: لیست مشخصات اصلی
+      security:
+        - ApiKeyAuth: []
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+      
+        - in: path
+          name: attribute_name
+          description: attribute name
+          required: True
+          schema:
+            type: integer
+            
+        - in: query
+          name: page
+          description: page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+        
+      responses:
+        '200':
+          description: return main attributes in page
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/mainAttributeItem'
+    put:
+      tags: 
+      - main attributes
+      summary: ویرایش مشخصه اصلی محصول
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: path
+          name: attribute_name
+          description: attribute name
+          required: True
+          schema:
+            type: integer
+
+        - in: query
+          name: attribute
+          description: attribute name
+          schema:
+            type: string
+            
+        - in: query
+          name: values
+          description: attribute values
+          schema:
+            type: array
+            items:
+              type: integer
+
+      responses:
+        '200':
+          description: return success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: True
+                    
+        '400':
+          description: incase of bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/badRequest'
+    delete:
+      tags: 
+      - main attributes
+      summary: اضافه کرده مشخصه اصلی برای محصول
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: path
+          name: attribute_name
+          description: attribute name
+          required: True
+          schema:
+            type: integer
+
+        
+      responses:
+        '204':
+          description: returns no content
+
+  /api/management/v1/products/{pk}/variants/:
+    get:
+      tags:
+      - product variants
+      summary: لیست تنوع محصولات
+      security:
+        - ApiKeyAuth: []
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+            
+        - in: query
+          name: page
+          description: page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+        
+      responses:
+        '200':
+          description: returns product variants  in page
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  next:
+                  
+                    type: string
+                    nullable: true
+                    example: '/api/management/v1/products/1/variants/?page=2'
+                    description: next page url if 
+                    
+                  previous:
+                    type: string
+                    nullable: true
+                    example: null
+                    description: previous page url if exists
+                    
+                  total_pages:
+                    type: integer
+                    description: total number of pages
+                    example: 2
+                    
+                  current_page:
+                    type: integer
+                    description: current page
+                    example: 1
+                    
+                  per_page:
+                    type: integer
+                    description: items per page
+                    example: 100
+                    
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/productVariantItem'
+
+  /api/management/v1/products/{pk}/variants/{variant_id}/:
+    get:
+      tags:
+      - product variants
+      summary: اطلاعات تنوع محصول
+      security:
+        - ApiKeyAuth: []
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+                  
+        - in: path
+          name: variant_id
+          description: variant id
+          required: True
+          schema:
+            type: integer
+        
+      responses:
+        '200':
+          description: returns product variant
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/productVariantItem'
+    put:
+      tags: 
+      - product variants
+      summary: ویرایش تنوع محصول
+      security:
+        - ApiKeyAuth: []
+
+      parameters:
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+                  
+        - in: path
+          name: variant_id
+          description: variant id
+          required: True
+          schema:
+            type: integer
+
+        - in: query
+          name: is_default
+          description: is default
+          required: false
+          schema:
+            type: boolean
+
+        - in: query
+          name: price
+          description: product price
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: compare_at_price
+          description: product price before sale
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: stock
+          description: stock
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: length
+          description: length
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: width
+          description: width
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: height
+          description: height
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: weight
+          description: weight
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: barcode
+          description: barcode
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: show_price
+          description: show price
+          required: false
+          schema:
+            type: boolean
+            
+        - in: query
+          name: product_identifier
+          description: product identifier
+          required: false
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: return success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: True
+    delete:
+      tags:
+      - product variants
+      summary: اطلاعات تنوع محصول
+      security:
+        - ApiKeyAuth: []
+      parameters:
+      
+        - in: path
+          name: pk
+          description: product id
+          required: True
+          schema:
+            type: integer
+                  
+        - in: path
+          name: variant_id
+          description: variant id
+          required: True
+          schema:
+            type: integer
+        
+      responses:
+        '204':
+          description: returns no content
+          
+          
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+
+  schemas:
+  
+    badRequest:
+      properties:
+        success:
+          type: boolean
+          example: false
+        errors:
+          type: object
+          
+    categoryItem:
+      type: object
+      properties:
+        id:
+          example: 1
+          type: integer
+        name:
+          type: string
+          example: موبایل و تبلت
+        parent:
+          example: 7
+          type: integer
+        avaiable:
+          example: True
+          type: boolean
+          
+    categoryDetail:
+      properties:
+        id:
+          example: 1
+          type: integer
+        name:
+          type: string
+          example: موبایل و تبلت
+        description:
+          type: string
+          example: ' توضیحات دسته بندی'
+        avaiable:
+          type: boolean
+          example: True
+        parent:
+          example: 7
+          type: integer
+        categories_menu_show:
+          type: boolean
+          example: True
+        top_menu_separate_show:
+          type: boolean
+          example: False
+        image:
+          type: string
+          example: null
+        image_alt:
+          type: string
+          example: null
+        seo_title:
+          type: string
+          example: null  
+        seo_description:
+          type: string
+          example: null          
+        old_path:
+          type: string
+          example: null                
+        old_slug:
+          type: string
+          example: null          
+          
+    brandItem:
+      properties:
+        id:
+          example: 1
+          type: integer
+        name:
+          type: string
+          example: xiamoi
+        slug:
+          type: string
+          example: xiamoi
+    
+    brandDetail:
+      properties:
+        id:
+          example: 1
+          type: integer
+        name:
+          type: string
+          example: xiamoi
+        slug:
+          type: string
+          example: xiamoi
+        image:
+          type: string
+          example: null
+        image_alt:
+          type: string
+          example: null
+        seo_title:
+          type: string
+          example: null  
+        seo_description:
+          type: string
+          example: null          
+          
+    productItem:
+      properties:
+        id:
+          example: 1
+          type: integer
+        name:
+          type: string
+          example: موبایل X10
+        english_name:
+          type: string
+          example: X10
+        main_category:
+          type: integer
+          example: 1
+        brand:
+          type: integer
+          example: 1
+        price:
+          type: integer
+          example: 700000
+        stock_type:
+          type: string
+          example: limited
+        has_variants:
+          type: boolean
+          example: true
+        available:
+          type: boolean
+          example: true
+        
+    productDetail:
+      properties:
+        id:
+          example: 1
+          type: integer
+        name:
+          type: string
+          example: موبایل X10
+        description:
+          type: string
+          example: <p> توضحیات</p>
+        analysis:
+          type: string
+          example: ''
+        english_name:
+          type: string
+          example: X10
+        main_category:
+          type: integer
+          example: 1
+        other_category:
+          type: array
+          example: [2,3]
+        brand:
+          type: integer
+          example: 1
+        is_digital:
+          type: boolean
+          example: false
+        price:
+          type: integer
+          example: 700000
+        compare_at_price:
+          type: integer
+          example: 800000
+        special_offer:
+          type: boolean
+          example: true
+        special_offer_end:
+          type: string
+          example: '2021-03-10T16:22:19+03:30'
+        length:
+          type: integer
+          example: null
+        width:
+          type: integer
+          example: null
+        height:
+          type: integer
+          example: null
+        barcode:
+          type: string
+          example: null
+        show_price:
+          type: boolean
+          example: true
+        manage_stock:
+          type: boolean
+          example: true
+        out_of_stock:
+          type: boolean
+          example: false
+        stock:
+          type: integer
+          example: 5
+        stock_type:
+          type: string
+          example: limited
+        maxx_order_quantity:
+          type: integer
+          example: 5
+        guarantee:
+          type: string
+          example: null
+        product_identifier:
+          type: string
+          example: null
+        old_path:
+          type: string
+          example: null
+        old_slug:
+          type: string
+          example: null
+        has_variants:
+          type: boolean
+          example: true
+        available:
+          type: boolean
+          example: true
+        seo_title:
+          type: string
+          example: موبایل X10
+        seo_description:
+          type: string
+          example: توضیحات
+        
+    tagItem:
+      properties:
+        id:
+          type: integer
+          example: 1
+        value:
+          type: string
+          example: 'برچسب'
+    
+    imageItem:
+      properties:
+        id:
+          type: integer
+          example: 1
+        image:
+          type: string
+          example: "/media/product-images/123.jpg"
+        image_alt:
+          type: string
+          example: ''
+        default:
+          type: boolean
+          example: true
+          
+    scondaryAttributeItem:
+      properties:
+        id:
+          type: integer
+          example: 1
+        attribute:
+          type: string
+          example: attribute name
+        value:
+          type: string
+          example: attribue value
+        
+        
+    mainAttributeItem:
+      properties:
+        attribute:
+          type: string
+          example: 'مشخصه'
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/mainAttributeValues'    
+            
+    mainAttributeValues:
+      properties:
+        id:
+          type: integer
+          example: 1
+        value:
+          type: string
+          example: attribue value
+    
+    productVariantItem:
+      properties:
+        id:
+          type: integer
+          example: 1
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/mainAttributeValues'  
+        price:
+          type: integer
+          example: 800000
+        compare_at_price:
+          type: integer
+          example: 900000
+        is_default:
+          type: boolean
+          example: true
+        stock:
+          type: integer
+          example: 10
+        length:
+          type: integer
+          example: null
+        width:
+          type: integer
+          example: null
+        height:
+          type: integer
+          example: null
+        weight:
+          type: integer
+          example: null
+        barcode:
+          type: string
+          example: null
+        product_identifier:
+          type: string
+          example: null
+        
